@@ -27,14 +27,14 @@ class StateJournal:
         task_id: str,
         stage_name: str,
         output_state: Dict[str, Any],
-        status: str = "COMPLETED"
+        status: str = "COMPLETED",
     ) -> None:
         """Record stage execution state for a task."""
         data = self._read()
         task_record = data.setdefault(task_id, {"stages": {}, "status": "IN_PROGRESS"})
         task_record["stages"][stage_name] = {
             "status": status,
-            "output": output_state
+            "output": output_state,
         }
         self._write(data)
 
@@ -42,3 +42,7 @@ class StateJournal:
         """Fetch recorded state for a given task ID."""
         data = self._read()
         return data.get(task_id)
+
+    def list_tasks(self) -> Dict[str, Any]:
+        """Return all recorded task records."""
+        return self._read()
